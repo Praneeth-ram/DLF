@@ -1,0 +1,337 @@
+.dashboard-page {
+  min-height: 100vh;
+  background: #f5f6fa;
+  color: #333;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* === HEADER === */
+.dashboard-header {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+}
+
+.welcome {
+  font-size: 24px;
+  color: #2c3e50;
+  margin-bottom: 5px;
+}
+
+.subtitle {
+  color: #7f8c8d;
+  font-size: 14px;
+}
+
+/* === TABS NAVIGATION === */
+.dashboard-tabs {
+  display: flex;
+  background: white;
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  gap: 5px;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 15px 20px;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  color: #7f8c8d;
+  transition: all 0.3s ease;
+}
+
+.tab-btn:hover {
+  background: #f8f9fa;
+  color: #3498db;
+}
+
+.tab-btn.active {
+  background: #3498db;
+  color: white;
+}
+
+/* === TAB CONTENT === */
+.dashboard-tab-content {
+  background: white;
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  min-height: 400px;
+}
+
+.tab-pane {
+  display: block;
+}
+
+.tab-title {
+  font-size: 20px;
+  color: #2c3e50;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* === PROPERTIES TAB === */
+.properties-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.property-card {
+  border: 1px solid #e1e8ed;
+  border-radius: 10px;
+  padding: 20px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.property-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+.property-name {
+  font-size: 18px;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+.property-location {
+  color: #7f8c8d;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.property-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-primary {
+  background: #3498db;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #2980b9;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid #3498db;
+  color: #3498db;
+}
+
+.btn-outline:hover {
+  background: #3498db;
+  color: white;
+}
+
+/* === DOCUMENTS TAB === */
+.property-selector {
+  margin-bottom: 30px;
+}
+
+.select-box {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #e1e8ed;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.documents-list {
+  display: grid;
+  gap: 15px;
+}
+
+.document-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border: 1px solid #e1e8ed;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.document-card:hover {
+  border-color: #3498db;
+  background: #f8f9fa;
+}
+
+.document-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.document-icon {
+  width: 40px;
+  height: 40px;
+  background: #e3f2fd;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #3498db;
+  font-size: 18px;
+}
+
+.document-details h4 {
+  font-size: 14px;
+  color: #2c3e50;
+  margin-bottom: 5px;
+}
+
+.document-details p {
+  font-size: 12px;
+  color: #7f8c8d;
+}
+
+.download-btn {
+  background: #27ae60;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.download-btn:hover {
+  background: #219a52;
+}
+
+/* === ENQUIRIES TAB === */
+.enquiries-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.enquiry-subtab {
+  padding: 10px 20px;
+  border: none;
+  background: #f8f9fa;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.enquiry-subtab.active {
+  background: #3498db;
+  color: white;
+}
+
+.enquiry-list {
+  display: grid;
+  gap: 15px;
+}
+
+.enquiry-card {
+  padding: 20px;
+  border: 1px solid #e1e8ed;
+  border-radius: 8px;
+  background: #f8f9fa;
+}
+
+.enquiry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.enquiry-from {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.enquiry-date {
+  font-size: 12px;
+  color: #7f8c8d;
+}
+
+.enquiry-message {
+  color: #5d6d7e;
+  line-height: 1.5;
+}
+
+.enquiry-property {
+  margin-top: 10px;
+  font-size: 12px;
+  color: #3498db;
+}
+
+/* === EMPTY STATES === */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #7f8c8d;
+}
+
+.empty-icon {
+  font-size: 48px;
+  margin-bottom: 20px;
+  opacity: 0.5;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  .dashboard-tabs {
+    flex-direction: column;
+  }
+  
+  .properties-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .document-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  
+  .property-actions {
+    flex-direction: column;
+  }
+  
+  .enquiry-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+}
