@@ -1,0 +1,8 @@
+fastapi
+uvicorn[standard]
+SQLAlchemy>=1.4
+pydantic
+python-jose[cryptography]
+passlib[bcrypt]
+faker
+python-dotenv
