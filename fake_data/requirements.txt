@@ -1,0 +1,7 @@
+psycopg2-binary
+python-dotenv
+Faker
+boto3
+tqdm
+bcrypt
+reportlab
