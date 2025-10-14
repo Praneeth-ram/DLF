@@ -1,0 +1,20 @@
+version: '3.8'
+services:
+  backend:
+    build: ./dlf_backend_full
+    container_name: dlf_backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./dlf_backend_full/app:/app/app
+    environment:
+      - PYTHONUNBUFFERED=1
+  frontend:
+    build: ./Frontend
+    container_name: dlf_frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./Frontend/src:/app/src
+    depends_on:
+      - backend
