@@ -15,6 +15,9 @@ services:
     ports:
       - "5173:5173"
     volumes:
-      - ./Frontend/src:/app/src
+      - ./Frontend:/app       # Map the whole frontend folder
+      - /app/node_modules     # Prevent overwriting node_modules
     depends_on:
       - backend
+    command: npm run dev -- --host
+

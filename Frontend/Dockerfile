@@ -1,4 +1,4 @@
-# Dockerfile for Vite frontend
+# Use Node.js official image
 FROM node:22-alpine
 
 # Set working directory
@@ -11,15 +11,14 @@ COPY vite.config.* ./
 # Install dependencies
 RUN npm install
 
-# Copy source files
-# COPY ./src ./src
+# Copy all source files
 COPY . .
 
 # Build the app for production
-RUN npm run dev
+RUN npm run build
 
-# Expose Vite port
-EXPOSE 5173
+# Expose Vite port (preview mode)
+EXPOSE 4173
 
 # Start the app in production preview mode
-CMD ["npm", "run", "preview", "--", "--port", "5173", "--host"]
+CMD ["npm", "run", "preview", "--", "--port", "4173", "--host"]
