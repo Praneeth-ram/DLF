@@ -6,3 +6,9 @@ python-jose[cryptography]
 passlib[bcrypt]
 faker
 python-dotenv
+pydantic[email]
+pytest
+httpx
+pydantic-settings
+psycopg2-binary
+python-multipart
