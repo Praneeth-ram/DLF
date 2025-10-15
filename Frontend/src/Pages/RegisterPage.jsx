@@ -19,9 +19,18 @@ const RegisterPage = () => {
     let strength = 'None';
     
     if (password.length >= 8) {
-      if (password.match(/[a-z]/) && password.match(/[A-Z]/) && password.match(/[0-9]/) && password.match(/[^a-zA-Z0-9]/)) {
+      if (
+        password.match(/[a-z]/) &&
+        password.match(/[A-Z]/) &&
+        password.match(/[0-9]/) &&
+        password.match(/[^a-zA-Z0-9]/)
+      ) {
         strength = 'Strong';
-      } else if (password.match(/[a-z]/) && password.match(/[A-Z]/) && password.match(/[0-9]/)) {
+      } else if (
+        password.match(/[a-z]/) &&
+        password.match(/[A-Z]/) &&
+        password.match(/[0-9]/)
+      ) {
         strength = 'Medium';
       } else {
         strength = 'Weak';
@@ -50,7 +59,7 @@ const RegisterPage = () => {
     setError('');
     setSuccess('');
 
-    // Validation
+    // Basic validation
     if (!formData.fullName || !formData.email || !formData.password || !formData.confirmPassword || !formData.terms) {
       setError('Please fill in all fields and accept the terms.');
       return;
@@ -66,16 +75,32 @@ const RegisterPage = () => {
       return;
     }
 
-    // 🎭 DEMO: Simulate API call to backend
     try {
-      // In real app, this would be: await registerUser(formData);
+      const response = await fetch('http://localhost:8000/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          full_name: formData.fullName,
+          email: formData.email,
+          password: formData.password
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.detail || 'Registration failed');
+      }
+
       setSuccess('✅ Account created successfully! Redirecting to login...');
-      
+
       setTimeout(() => {
         navigate('/auth/login?message=registration_success');
       }, 2000);
     } catch (err) {
-      setError('Registration failed. Please try again.');
+      setError(err.message);
     }
   };
 

@@ -27,51 +27,50 @@ const LoginPage = () => {
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    setSuccess('');
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setError('');
+  setSuccess('');
 
-    // Validation
-    if (!formData.email || !formData.password) {
-      setError('Please fill in all fields.');
-      return;
+  if (!formData.email || !formData.password) {
+    setError('Please fill in all fields.');
+    return;
+  }
+
+  try {
+    // 🧠 Backend expects "username" and "password"
+    const response = await fetch('http://localhost:8000/api/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({
+        username: formData.email, // maps email → username
+        password: formData.password,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.detail || 'Invalid email or password');
     }
 
-    // 🎭 DEMO: Simulate API call to backend
-    try {
-      // In real app, this would be: await loginUser(formData);
-      // For demo, we'll simulate role detection based on email
-      let userRole = 'registered';
-      
-      if (formData.email.includes('admin')) {
-        userRole = 'admin';
-      } else if (formData.email.includes('owner')) {
-        userRole = 'owner';
-      }
+    // Save JWT token locally
+    localStorage.setItem('token', data.access_token);
+    localStorage.setItem('email', formData.email);
 
-      // Store user info (in real app, this would be JWT token)
-      localStorage.setItem('user', JSON.stringify({
-        email: formData.email,
-        role: userRole,
-        isAuthenticated: true
-      }));
+    setSuccess('✅ Login successful! Redirecting...');
 
-      setSuccess(`✅ Login successful! Welcome ${userRole}. Redirecting...`);
+    // Redirect user
+    setTimeout(() => {
+      navigate('/properties');
+    }, 1500);
+  } catch (err) {
+    setError(err.message);
+  }
+};
 
-      // Redirect based on role
-      setTimeout(() => {
-        if (userRole === 'admin') {
-          navigate('/admin');
-        } else {
-          navigate('/properties');
-        }
-      }, 1500);
-
-    } catch (err) {
-      setError('Login failed. Please check your credentials.');
-    }
-  };
 
   return (
     <AuthForm 
