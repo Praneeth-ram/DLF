@@ -34,6 +34,7 @@ class PropertyOut(BaseModel):
     state: str
     property_type: Optional[str]
     owner_id: int
+    owner: UserOut
     document_code: Optional[str]
 
     class Config:
@@ -63,6 +64,9 @@ class PropertyBase(BaseModel):
     amenities: Optional[List[str]] = None
     is_active: bool = True
 
+    class Config:
+        orm_mode = True
+
 class PropertyCreate(PropertyBase):
     pass
 
@@ -91,7 +95,7 @@ class Property(PropertyBase):
         from_attributes = True
 
 class PropertyListResponse(BaseModel):
-    properties: List[Property]
+    properties: List[PropertyOut]
     total: int
     page: int
     pages: int

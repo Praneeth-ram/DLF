@@ -44,6 +44,7 @@ class Property(Base):
     carpet_area = Column(Float)
     is_active = Column(Boolean, default=True)
     owner_id = Column(Integer, ForeignKey("users.id"))
+    owner = relationship("User", back_populates="properties")
     
     # Residential specific
     bedrooms = Column(Integer)
