@@ -9,6 +9,8 @@ services:
       - ./dlf_backend_full/app:/app/app
     environment:
       - PYTHONUNBUFFERED=1
+      - DATABASE_URL=postgresql+psycopg2://postgres:pran08@db:5432/dlf_database
+
   frontend:
     build: ./Frontend
     container_name: dlf_frontend
@@ -21,3 +23,12 @@ services:
       - backend
     command: npm run dev -- --host
 
+  db:
+    image: postgres:15
+    container_name: dlf_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: pran08
+      POSTGRES_DB: dlf_database
+    ports:
+      - "5432:5432"
