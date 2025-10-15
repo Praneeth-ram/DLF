@@ -61,19 +61,20 @@ def get_all_properties(
         'min_area': min_area,
         'max_area': max_area
     }
-    
-    # Remove None values
     filters = {k: v for k, v in filters.items() if v is not None}
     
     properties, total = crud.get_properties(db, skip=skip, limit=limit, filters=filters)
     pages = (total + limit - 1) // limit
     
-    return {
-        "properties": properties,
-        "total": total,
-        "page": page,
-        "pages": pages
-    }
+    # Convert SQLAlchemy objects to Pydantic PropertyOut models
+    properties_out = [schemas.PropertyOut.from_orm(p) for p in properties]
+    
+    return schemas.PropertyListResponse(
+        properties=properties_out,
+        total=total,
+        page=page,
+        pages=pages
+    )
 
 @router.get("/{property_id}", response_model=schemas.Property)
 def get_property(property_id: int, db: Session = Depends(get_db)):

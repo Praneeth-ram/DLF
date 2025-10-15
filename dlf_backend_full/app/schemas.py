@@ -29,12 +29,19 @@ class Token(BaseModel):
 class PropertyOut(BaseModel):
     id: int
     title: str
-    address: str
-    city: str
-    state: str
-    property_type: Optional[str]
+    description: Optional[str] = None
+    price: float
+    location: str
+    address: Optional[str] = None
+    property_type: Optional[str] = None
+    property_sub_type: Optional[str] = None
+    category: str
+    area: Optional[float] = None
+    carpet_area: Optional[float] = None
+    bedrooms: Optional[int] = None
+    bathrooms: Optional[int] = None
     owner_id: int
-    owner: UserOut
+    owner: Optional[UserOut]
     document_code: Optional[str]
 
     class Config:
@@ -54,7 +61,7 @@ class PropertyBase(BaseModel):
     category: str
     area: Optional[float] = None
     carpet_area: Optional[float] = None
-    owner: Optional[str] = None
+    owner_id: Optional[str] = None
     bedrooms: Optional[int] = None
     bathrooms: Optional[int] = None
     balconies: Optional[int] = None
@@ -79,6 +86,7 @@ class PropertyUpdate(BaseModel):
     property_type: Optional[str] = None
     property_sub_type: Optional[str] = None
     category: Optional[str] = None
+    user_id: Optional[int] = None
     area: Optional[float] = None
     carpet_area: Optional[float] = None
     owner: Optional[str] = None

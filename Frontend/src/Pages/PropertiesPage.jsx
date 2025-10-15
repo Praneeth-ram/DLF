@@ -616,39 +616,31 @@ const PropertiesPage = () => {
   const [totalProperties, setTotalProperties] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
 
-  // Fetch properties from API
   const fetchProperties = async (page = 1, filters = {}) => {
     try {
       setLoading(true);
       
-      // Build query parameters
       const params = new URLSearchParams({
         page: page.toString(),
         limit: itemsPerPage.toString(),
         ...filters
       });
       
-      if (searchTerm) {
-        params.append('search', searchTerm);
-      }
+      if (searchTerm) params.append('search', searchTerm);
 
-      const response = await fetch(`${API_BASE_URL}/properties?${params}`);
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch properties');
-      }
-      
+      const response = await fetch(`${API_BASE_URL}/properties/?${params}`);
+      if (!response.ok) throw new Error('Failed to fetch properties');
+
       const data = await response.json();
-      
-      setProperties(data.properties);
-      setFilteredProperties(data.properties);
-      setTotalProperties(data.total);
-      setTotalPages(data.pages);
-      setCurrentPage(data.page);
+
+      setProperties(data.properties || []);
+      setFilteredProperties(data.properties || []);
+      setTotalProperties(data.total || 0);
+      setTotalPages(data.pages || 0);
+      setCurrentPage(data.page || 1);
       
     } catch (error) {
       console.error('Error fetching properties:', error);
-      // Fallback to empty array
       setProperties([]);
       setFilteredProperties([]);
     } finally {
@@ -656,28 +648,19 @@ const PropertiesPage = () => {
     }
   };
 
-  // Initial load and when filters change
   useEffect(() => {
     const appliedFilters = {};
-    
-    // Add non-empty filters
     Object.entries(filters).forEach(([key, value]) => {
-      if (value && value !== '') {
-        appliedFilters[key] = value;
-      }
+      if (value && value !== '') appliedFilters[key] = value;
     });
 
     fetchProperties(1, appliedFilters);
   }, [searchTerm, filters]);
 
-  // Handle page change
   const handlePageChange = (newPage) => {
     const appliedFilters = {};
-    
     Object.entries(filters).forEach(([key, value]) => {
-      if (value && value !== '') {
-        appliedFilters[key] = value;
-      }
+      if (value && value !== '') appliedFilters[key] = value;
     });
 
     fetchProperties(newPage, appliedFilters);
@@ -686,10 +669,7 @@ const PropertiesPage = () => {
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
-    setFilters(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setFilters(prev => ({ ...prev, [name]: value }));
   };
 
   const clearFilters = () => {
@@ -706,13 +686,15 @@ const PropertiesPage = () => {
     });
   };
 
-  const formatPrice = (price) => {
-    return new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: 'INR',
-      maximumFractionDigits: 0
-    }).format(price);
-  };
+const formatPrice = (price) => {
+  if (price == null) return '₹0';
+  return new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'INR',
+    maximumFractionDigits: 0
+  }).format(price);
+};
+
 
   const getPropertyIcon = (category) => {
     switch(category) {
@@ -723,15 +705,10 @@ const PropertiesPage = () => {
     }
   };
 
-  // Parse amenities from JSON string if needed
   const parseAmenities = (amenities) => {
     if (Array.isArray(amenities)) return amenities;
     if (typeof amenities === 'string') {
-      try {
-        return JSON.parse(amenities);
-      } catch {
-        return [];
-      }
+      try { return JSON.parse(amenities); } catch { return []; }
     }
     return [];
   };
@@ -777,35 +754,27 @@ const PropertiesPage = () => {
               <option value="industrial">🏭 Industrial</option>
             </select>
 
-            {/* Type Filter (dynamic based on category) */}
+            {/* Type Filter */}
             <select name="property_type" value={filters.property_type} onChange={handleFilterChange}>
               <option value="">All Types</option>
-              {filters.category === 'residential' && (
-                <>
-                  <option value="Apartment">Apartment</option>
-                  <option value="Villa">Villa</option>
-                  <option value="Plot">Plot</option>
-                </>
-              )}
-              {filters.category === 'commercial' && (
-                <>
-                  <option value="Office Space">Office Space</option>
-                  <option value="Retail Space">Retail Space</option>
-                </>
-              )}
-              {filters.category === 'industrial' && (
+              {filters.category === 'residential' && <>
+                <option value="Apartment">Apartment</option>
+                <option value="Villa">Villa</option>
+                <option value="Plot">Plot</option>
+              </>}
+              {filters.category === 'commercial' && <>
+                <option value="Office Space">Office Space</option>
+                <option value="Retail Space">Retail Space</option>
+              </>}
+              {filters.category === 'industrial' && <option value="Warehouse">Warehouse</option>}
+              {!filters.category && <>
+                <option value="Apartment">Apartment</option>
+                <option value="Villa">Villa</option>
+                <option value="Plot">Plot</option>
+                <option value="Office Space">Office Space</option>
+                <option value="Retail Space">Retail Space</option>
                 <option value="Warehouse">Warehouse</option>
-              )}
-              {!filters.category && (
-                <>
-                  <option value="Apartment">Apartment</option>
-                  <option value="Villa">Villa</option>
-                  <option value="Plot">Plot</option>
-                  <option value="Office Space">Office Space</option>
-                  <option value="Retail Space">Retail Space</option>
-                  <option value="Warehouse">Warehouse</option>
-                </>
-              )}
+              </>}
             </select>
 
             <select name="location" value={filters.location} onChange={handleFilterChange}>
@@ -818,23 +787,9 @@ const PropertiesPage = () => {
               <option value="Bhiwadi">Bhiwadi</option>
             </select>
 
-            <input
-              type="number"
-              name="minPrice"
-              placeholder="Min Price (₹)"
-              value={filters.minPrice}
-              onChange={handleFilterChange}
-            />
+            <input type="number" name="minPrice" placeholder="Min Price (₹)" value={filters.minPrice} onChange={handleFilterChange} />
+            <input type="number" name="maxPrice" placeholder="Max Price (₹)" value={filters.maxPrice} onChange={handleFilterChange} />
 
-            <input
-              type="number"
-              name="maxPrice"
-              placeholder="Max Price (₹)"
-              value={filters.maxPrice}
-              onChange={handleFilterChange}
-            />
-
-            {/* Bedrooms filter (only for residential) */}
             {filters.category === 'residential' && (
               <select name="bedrooms" value={filters.bedrooms} onChange={handleFilterChange}>
                 <option value="">Any Bedrooms</option>
@@ -845,26 +800,10 @@ const PropertiesPage = () => {
               </select>
             )}
 
-            {/* Area filters */}
-            <input
-              type="number"
-              name="minArea"
-              placeholder="Min Area (sq.ft)"
-              value={filters.minArea}
-              onChange={handleFilterChange}
-            />
+            <input type="number" name="minArea" placeholder="Min Area (sq.ft)" value={filters.minArea} onChange={handleFilterChange} />
+            <input type="number" name="maxArea" placeholder="Max Area (sq.ft)" value={filters.maxArea} onChange={handleFilterChange} />
 
-            <input
-              type="number"
-              name="maxArea"
-              placeholder="Max Area (sq.ft)"
-              value={filters.maxArea}
-              onChange={handleFilterChange}
-            />
-
-            <button onClick={clearFilters} className="clear-filters-btn">
-              Clear Filters
-            </button>
+            <button onClick={clearFilters} className="clear-filters-btn">Clear Filters</button>
           </div>
         </div>
       </section>
@@ -897,76 +836,57 @@ const PropertiesPage = () => {
                         {getPropertyIcon(property.category)}
                       </div>
                       <div className="property-badge">
-                        {property.property_type}
+                        {property.property_type || 'N/A'}
                       </div>
                     </div>
                     <div className="property-content">
-                      <h3>{property.title}</h3>
-                      <p className="property-location">📍 {property.location}</p>
+                      <h3>{property.title || 'Untitled'}</h3>
+                      <p className="property-location">📍 {property.location || 'N/A'}</p>
                       <p className="property-price">{formatPrice(property.price)}</p>
-                      
+
+
+
                       <div className="property-features">
-                        {property.category === 'residential' && (
-                          <>
-                            {property.bedrooms && <span>🛏️ {property.bedrooms} beds</span>}
-                            {property.bathrooms && <span>🚿 {property.bathrooms} baths</span>}
-                            <span>📐 {property.area?.toLocaleString()} sq.ft.</span>
-                            {property.property_type === 'Apartment' && property.floor_number && (
-                              <span>🏢 Floor {property.floor_number}/{property.total_floors}</span>
-                            )}
-                          </>
-                        )}
-                        {property.category === 'commercial' && (
-                          <>
-                            <span>📐 {property.area?.toLocaleString()} sq.ft.</span>
-                            <span>🏢 {property.property_type}</span>
-                            {property.carpet_area && <span>📦 {property.carpet_area.toLocaleString()} carpet</span>}
-                          </>
-                        )}
-                        {property.category === 'industrial' && (
-                          <>
-                            <span>🏭 {property.area?.toLocaleString()} sq.ft.</span>
-                            {property.clear_height && <span>📏 {property.clear_height}ft height</span>}
-                            <span>🏗️ Warehouse</span>
-                          </>
-                        )}
+                        {property.category === 'residential' && <>
+                          {property.bedrooms && <span>🛏️ {property.bedrooms} beds</span>}
+                          {property.bathrooms && <span>🚿 {property.bathrooms} baths</span>}
+                          <span>📐 {property.area?.toLocaleString() || 0} sq.ft.</span>
+                          {property.property_type === 'Apartment' && property.floor_number && (
+                            <span>🏢 Floor {property.floor_number}/{property.total_floors || 1}</span>
+                          )}
+                        </>}
+                        {property.category === 'commercial' && <>
+                          <span>📐 {property.area?.toLocaleString() || 0} sq.ft.</span>
+                          <span>🏢 {property.property_type || 'N/A'}</span>
+                          {property.carpet_area && <span>📦 {property.carpet_area.toLocaleString()} carpet</span>}
+                        </>}
+                        {property.category === 'industrial' && <>
+                          <span>🏭 {property.area?.toLocaleString() || 0} sq.ft.</span>
+                          {property.clear_height && <span>📏 {property.clear_height}ft height</span>}
+                          <span>🏗️ Warehouse</span>
+                        </>}
                       </div>
-                      
-                      <p className="property-description">{property.description}</p>
+
+                      <p className="property-description">{property.description || 'No description available'}</p>
                       <div className="property-meta-info">
-                        <span className="property-category">{property.category.toUpperCase()}</span>
+                        <span className="property-category">{property.category?.toUpperCase() || 'N/A'}</span>
                         {property.property_sub_type && (
                           <span className="property-subtype">{property.property_sub_type}</span>
                         )}
                       </div>
                       <div className="property-actions">
-                        <Link to={`/properties/${property.id}`} className="view-details-btn">
-                          View Details
-                        </Link>
+                        <Link to={`/properties/${property.id}`} className="view-details-btn">View Details</Link>
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
 
-              {/* Pagination */}
               {totalPages > 1 && (
                 <div className="pagination">
-                  <button 
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage === 1}
-                  >
-                    Previous
-                  </button>
-                  
+                  <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>Previous</button>
                   <span>Page {currentPage} of {totalPages}</span>
-                  
-                  <button 
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage === totalPages}
-                  >
-                    Next
-                  </button>
+                  <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>Next</button>
                 </div>
               )}
             </>
