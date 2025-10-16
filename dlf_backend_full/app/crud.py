@@ -1,5 +1,4 @@
 from sqlalchemy.orm import Session
-from fastapi import HTTPException
 from . import models, utils ,schemas
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import or_, and_
@@ -91,17 +90,7 @@ def get_property(db: Session, property_id: int):
     return db.query(models.Property).filter(models.Property.id == property_id).first()
 
 def create_property(db: Session, property: schemas.PropertyCreate):
-    property_data = property.dict()
-
-    # If the request provides owner as a string, convert to owner_id
-    owner_name = property_data.pop("owner", None)
-    if owner_name:
-        owner = db.query(models.User).filter(models.User.full_name == owner_name).first()
-        if not owner:
-            raise HTTPException(status_code=400, detail="Owner not found")
-        property_data["owner_id"] = owner.id
-
-    db_property = models.Property(**property_data)
+    db_property = models.Property(**property.dict())
     db.add(db_property)
     db.commit()
     db.refresh(db_property)
