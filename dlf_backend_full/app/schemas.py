@@ -63,6 +63,9 @@ class PropertyBase(BaseModel):
     facing: Optional[str] = None
     amenities: Optional[List[str]] = None
     is_active: bool = True
+    city: Optional[str] = None
+    state: Optional[str] = None
+
 
     class Config:
         orm_mode = True

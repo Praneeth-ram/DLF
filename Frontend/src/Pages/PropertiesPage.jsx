@@ -632,7 +632,8 @@ const PropertiesPage = () => {
         params.append('search', searchTerm);
       }
 
-      const response = await fetch(`${API_BASE_URL}/properties?${params}`);
+      const response = await fetch(`${API_BASE_URL}/properties/?${params}`);
+
       
       if (!response.ok) {
         throw new Error('Failed to fetch properties');

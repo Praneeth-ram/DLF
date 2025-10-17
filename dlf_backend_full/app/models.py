@@ -38,6 +38,8 @@ class Property(Base):
     property_type = Column(String(50), nullable=False)  # Apartment, Villa, Office Space, Retail Space, Warehouse, Plot
     property_sub_type = Column(String(50))  # 3BHK, IT Park Office, Residential Plot, etc.
     category = Column(String(20), nullable=False)  # residential, commercial, industrial
+    city = Column(String)   # add this
+    state = Column(String)   # add this
     
     # Common fields
     area = Column(Float)  # in sq.ft
